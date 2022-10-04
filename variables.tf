@@ -67,8 +67,28 @@ variable "enable_ec2" {
   type    = bool
 
   description = <<-END
-    Enable the deployment of an EC2 instance
+    an option to enable the EC2 instance.
     https://go.s3d.club/site-group#enable_ec2
+    END
+}
+
+variable "enable_eks" {
+  default = false
+  type    = bool
+
+  description = <<-END
+    an option to enable EKS.
+    https://go.s3d.club/tf/site-group#enable_eks
+    END
+}
+
+variable "enable_k8_auth" {
+  default = false
+  type    = bool
+
+  description = <<-END
+    an option to enable the Kubernets Auth Map..
+    https://go.s3d.club/tf/site-group#enable_k8_auth
     END
 }
 
@@ -92,13 +112,23 @@ variable "ec2_work_count" {
     END
 }
 
+variable "kms_key_arn" {
+  default = null
+  type    = string
+
+  description = <<-END
+    a KMS key ARN.
+    https://go.s3d.club/tf/site-group#kms_key_arn
+    END
+}
+
 variable "name_prefix" {
   default = null
   type    = string
 
   description = <<-END
-    AWS Region
-    https://go.s3d.club/site-group#aws_region
+    a prefix for resource names.
+    https://go.s3d.club/tf/site-group#name_prefix
     END
 }
 
@@ -107,8 +137,8 @@ variable "region" {
   type    = string
 
   description = <<-END
-    AWS Region
-    https://go.s3d.club/site-group#aws_region
+    an AWS region (i.e. `us-east-1`).
+    https://go.s3d.club/tf/site-group#region
     END
 }
 
@@ -117,8 +147,8 @@ variable "tags" {
   type    = map(string)
 
   description = <<-END
-    AWS Region
-    https://go.s3d.club/site-group#tags
+    a map of tags for resources.
+    https://go.s3d.club/tf/site-group#tags
     END
 }
 
@@ -126,7 +156,7 @@ variable "vpc_id" {
   type = string
 
   description = <<-END
-    VPC ID
-    https://go.s3d.club/site-group#vpc_id
+    a VPC ID.
+    https://go.s3d.club/tf/site-group#vpc_id
     END
 }

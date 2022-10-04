@@ -44,7 +44,7 @@ locals {
 
 module "ec2_work" {
   count  = var.enable_ec2 ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-ec2?ref=v0.1.1"
+  source = "github.com/s3d-club/terraform-aws-ec2?ref=v0.1.3"
 
   cidrs    = var.cidrs
   cidr6s   = var.cidr6s
@@ -59,16 +59,18 @@ module "ec2_work" {
 
 module "ecr" {
   for_each = toset(var.ecrs)
-  source   = "github.com/s3d-club/terraform-aws-ecr?ref=v0.1.2"
+  source   = "github.com/s3d-club/terraform-aws-ecr?ref=v0.1.3"
 
+  kms_key_arn = var.kms_key_arn
   name_prefix = each.key
 }
 
 module "eks" {
-  count  = var.eks_version == null ? 0 : 1
-  source = "github.com/s3d-club/terraform-aws-eks?ref=v0.1.1"
+  count  = var.enable_eks ? 1 : 0
+  source = "github.com/s3d-club/terraform-aws-eks?ref=v0.1.2"
 
   cidrs             = var.cidrs
+  kms_key_arn       = aws_kms_key.this.id
   cluster_version   = var.eks_version
   name_prefix       = local.name_prefix
   tags              = local.tags
@@ -77,9 +79,9 @@ module "eks" {
 }
 
 module "k8_auth" {
-  count      = length(module.eks)
+  count      = var.enable_k8_auth ? 1 : 0
   depends_on = [module.eks]
-  source     = "github.com/s3d-club/terraform-kubernetes-aws-auth?ref=v0.0.4"
+  source     = "github.com/s3d-club/terraform-kubernetes-aws-auth?ref=v0.0.5"
 
   cluster_name    = module.eks[0].cluster.name
   region          = var.region
@@ -87,7 +89,7 @@ module "k8_auth" {
 }
 
 module "name" {
-  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.1"
+  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.2"
 
   context = var.name_prefix
   path    = path.module
@@ -96,7 +98,7 @@ module "name" {
 
 module "sg_ingress_open" {
   count  = var.cidrs == null ? 0 : 1
-  source = "github.com/s3d-club/terraform-aws-sg_ingress_open?ref=v0.1.1"
+  source = "github.com/s3d-club/terraform-aws-sg_ingress_open?ref=v0.1.2"
 
   cidr        = var.cidrs
   cidr6       = var.cidr6s
@@ -119,20 +121,70 @@ resource "aws_key_pair" "this" {
   tags       = local.tags
 }
 
-resource "tls_private_key" "this" {
-  count     = var.ec2_key_name == null ? 1 : 0
-  algorithm = "RSA"
-  rsa_bits  = 4096
+resource "aws_kms_key" "this" {
+  description = module.name.prefix
+  tags        = local.tags
+}
+
+# We can't log the logging bucket
+#   tfsec:ignore:aws-s3-enable-bucket-logging
+#   tfsec:ignore:aws-s3-enable-versioning
+resource "aws_s3_bucket" "log" {
+  bucket_prefix = "${local.name_prefix}-tf-log-"
+  tags          = local.tags
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = aws_kms_key.this.id
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
 }
 
 resource "aws_s3_bucket" "this" {
   bucket_prefix = "${local.name_prefix}-tf-"
   tags          = local.tags
+
+  logging {
+    target_bucket = aws_s3_bucket.log.id
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = aws_kms_key.this.id
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
+}
+
+resource "aws_s3_bucket_acl" "log" {
+  acl    = "private"
+  bucket = aws_s3_bucket.log.id
+}
+
+resource "aws_s3_bucket_public_access_block" "log" {
+  bucket                  = aws_s3_bucket.log.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_acl" "this" {
   acl    = "private"
   bucket = aws_s3_bucket.this.id
+}
+
+resource "aws_s3_bucket_public_access_block" "this" {
+  bucket                  = aws_s3_bucket.this.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_versioning" "this" {
@@ -143,6 +195,8 @@ resource "aws_s3_bucket_versioning" "this" {
   }
 }
 
+# We do not need recovery for the locks
+#   tfsec:ignore:aws-dynamodb-enable-recovery
 resource "aws_dynamodb_table" "this" {
   count = var.enable_tf_lock_table ? 1 : 0
 
@@ -155,4 +209,15 @@ resource "aws_dynamodb_table" "this" {
     name = "LockID"
     type = "S"
   }
+
+  server_side_encryption {
+    enabled     = true
+    kms_key_arn = var.kms_key_arn
+  }
+}
+
+resource "tls_private_key" "this" {
+  count     = var.ec2_key_name == null ? 1 : 0
+  algorithm = "RSA"
+  rsa_bits  = 4096
 }
