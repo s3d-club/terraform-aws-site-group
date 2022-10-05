@@ -44,7 +44,7 @@ locals {
 
 module "ec2_work" {
   count  = var.enable_ec2 ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-ec2?ref=v0.1.3"
+  source = "github.com/s3d-club/terraform-aws-ec2?ref=v0.1.4"
 
   cidrs    = var.cidrs
   cidr6s   = var.cidr6s
@@ -59,7 +59,7 @@ module "ec2_work" {
 
 module "ecr" {
   for_each = toset(var.ecrs)
-  source   = "github.com/s3d-club/terraform-aws-ecr?ref=v0.1.3"
+  source   = "github.com/s3d-club/terraform-aws-ecr?ref=v0.1.4"
 
   kms_key_arn = var.kms_key_arn
   name_prefix = each.key
@@ -67,7 +67,7 @@ module "ecr" {
 
 module "eks" {
   count  = var.enable_eks ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-eks?ref=v0.1.2"
+  source = "github.com/s3d-club/terraform-aws-eks?ref=v0.1.3"
 
   cidrs             = var.cidrs
   kms_key_arn       = aws_kms_key.this.id
@@ -89,16 +89,17 @@ module "k8_auth" {
 }
 
 module "name" {
-  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.2"
+  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.3"
 
   context = var.name_prefix
   path    = path.module
   tags    = var.tags
 }
 
+# tfsec:ignore:aws-ec2-no-public-ingress-sgr
 module "sg_ingress_open" {
   count  = var.cidrs == null ? 0 : 1
-  source = "github.com/s3d-club/terraform-aws-sg_ingress_open?ref=v0.1.2"
+  source = "github.com/s3d-club/terraform-aws-sg_ingress_open?ref=v0.1.3"
 
   cidr        = var.cidrs
   cidr6       = var.cidr6s
@@ -121,6 +122,7 @@ resource "aws_key_pair" "this" {
   tags       = local.tags
 }
 
+# tfsec:ignore:aws-kms-auto-rotate-keys
 resource "aws_kms_key" "this" {
   description = module.name.prefix
   tags        = local.tags
