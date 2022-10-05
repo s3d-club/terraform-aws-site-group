@@ -11,3 +11,7 @@ Recently completed and planned work is tracked here.
 - Updated `k8_auth` module
 - Updated `name` module
 - Updated `sg_ingress_open` module
+
+## [0.1.4](.)
+- Added the now required `subnet_id` variable
+- Updated `ec_work` module
