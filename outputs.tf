@@ -55,13 +55,3 @@ output "tags" {
     https://go.s3d.com/aws-site-group#tags
     END
 }
-
-output "key" {
-  value = tls_private_key.this
-
-  description = <<-END
-    Key
-    https://go.s3d.com/aws-site-group#key
-    END
-}
-

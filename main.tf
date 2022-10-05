@@ -11,6 +11,12 @@ data "aws_iam_policy_document" "k8_master" {
   }
 }
 
+data "aws_kms_key" "this" {
+  count = var.kms_key_id == null ? 0 : 1
+
+  key_id = var.kms_key_id
+}
+
 data "aws_subnet" "this" {
   for_each = toset(data.aws_subnets.this.ids)
 
@@ -28,6 +34,7 @@ locals {
   account_id  = data.aws_caller_identity.this.account_id
   name_prefix = module.name.prefix
   tags        = module.name.tags
+  kms_key_arn = try(data.aws_kms_key.this[0].arn, null)
 
   # If the user supplies an EC2 Keyname we use theirs and do not create one for
   # the Site Group.
@@ -44,7 +51,7 @@ locals {
 
 module "ec2_work" {
   count  = var.enable_ec2 ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-ec2?ref=v0.1.5"
+  source = "github.com/s3d-club/terraform-aws-ec2?ref=v0.1.6"
 
   cidr6s    = var.cidr6s
   cidrs     = var.cidrs
@@ -62,7 +69,7 @@ module "ecr" {
   for_each = toset(var.ecrs)
   source   = "github.com/s3d-club/terraform-aws-ecr?ref=v0.1.4"
 
-  kms_key_arn = var.kms_key_arn
+  kms_key_arn = local.kms_key_arn
   name_prefix = each.key
 }
 
@@ -71,7 +78,7 @@ module "eks" {
   source = "github.com/s3d-club/terraform-aws-eks?ref=v0.1.3"
 
   cidrs             = var.cidrs
-  kms_key_arn       = aws_kms_key.this.id
+  kms_key_arn       = local.kms_key_arn
   cluster_version   = var.eks_version
   name_prefix       = local.name_prefix
   tags              = local.tags
@@ -115,31 +122,19 @@ resource "aws_iam_role" "k8_master" {
   assume_role_policy = data.aws_iam_policy_document.k8_master.json
 }
 
-resource "aws_key_pair" "this" {
-  count = length(tls_private_key.this)
-
-  key_name   = "${local.name_prefix}-${count.index}"
-  public_key = tls_private_key.this[0].public_key_openssh
-  tags       = local.tags
-}
-
-# tfsec:ignore:aws-kms-auto-rotate-keys
-resource "aws_kms_key" "this" {
-  description = module.name.prefix
-  tags        = local.tags
-}
-
 # We can't log the logging bucket
 #   tfsec:ignore:aws-s3-enable-bucket-logging
 #   tfsec:ignore:aws-s3-enable-versioning
 resource "aws_s3_bucket" "log" {
+  count = var.enable_tf_bucket ? 1 : 0
+
   bucket_prefix = "${local.name_prefix}-tf-log-"
   tags          = local.tags
 
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.this.id
+        kms_master_key_id = var.kms_key_id
         sse_algorithm     = "aws:kms"
       }
     }
@@ -147,17 +142,19 @@ resource "aws_s3_bucket" "log" {
 }
 
 resource "aws_s3_bucket" "this" {
+  count = var.enable_tf_bucket ? 1 : 0
+
   bucket_prefix = "${local.name_prefix}-tf-"
   tags          = local.tags
 
   logging {
-    target_bucket = aws_s3_bucket.log.id
+    target_bucket = aws_s3_bucket.log[0].id
   }
 
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.this.id
+        kms_master_key_id = var.kms_key_id
         sse_algorithm     = "aws:kms"
       }
     }
@@ -165,12 +162,16 @@ resource "aws_s3_bucket" "this" {
 }
 
 resource "aws_s3_bucket_acl" "log" {
+  count = var.enable_tf_bucket ? 1 : 0
+
   acl    = "private"
-  bucket = aws_s3_bucket.log.id
+  bucket = aws_s3_bucket.log[0].id
 }
 
 resource "aws_s3_bucket_public_access_block" "log" {
-  bucket                  = aws_s3_bucket.log.id
+  count = var.enable_tf_bucket ? 1 : 0
+
+  bucket                  = aws_s3_bucket.log[0].id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -178,12 +179,16 @@ resource "aws_s3_bucket_public_access_block" "log" {
 }
 
 resource "aws_s3_bucket_acl" "this" {
+  count = var.enable_tf_bucket ? 1 : 0
+
   acl    = "private"
-  bucket = aws_s3_bucket.this.id
+  bucket = aws_s3_bucket.this[0].id
 }
 
 resource "aws_s3_bucket_public_access_block" "this" {
-  bucket                  = aws_s3_bucket.this.id
+  count = var.enable_tf_bucket ? 1 : 0
+
+  bucket                  = aws_s3_bucket.this[0].id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -191,7 +196,9 @@ resource "aws_s3_bucket_public_access_block" "this" {
 }
 
 resource "aws_s3_bucket_versioning" "this" {
-  bucket = aws_s3_bucket.this.id
+  count = var.enable_tf_bucket ? 1 : 0
+
+  bucket = aws_s3_bucket.this[0].id
 
   versioning_configuration {
     status = "Enabled"
@@ -215,12 +222,6 @@ resource "aws_dynamodb_table" "this" {
 
   server_side_encryption {
     enabled     = true
-    kms_key_arn = var.kms_key_arn
+    kms_key_arn = local.kms_key_arn
   }
-}
-
-resource "tls_private_key" "this" {
-  count     = var.ec2_key_name == null ? 1 : 0
-  algorithm = "RSA"
-  rsa_bits  = 4096
 }

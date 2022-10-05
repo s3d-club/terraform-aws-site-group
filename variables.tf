@@ -3,7 +3,7 @@ variable "az_blacklist" {
 
   description = <<-END
     Availability Zone Black List
-    https://go.s3d.club/site-group#az_blacklist
+    https://go.s3d.club/tf/site-group#az_blacklist
     END
 }
 
@@ -12,16 +12,17 @@ variable "cidrs" {
 
   description = <<-END
     CIDRs
-    https://go.s3d.club/site-group#cidrs
+    https://go.s3d.club/tf/site-group#cidrs
     END
 }
 
 variable "cidr6s" {
-  type = list(string)
+  default = []
+  type    = list(string)
 
   description = <<-END
     CIDR6s
-    https://go.s3d.club/site-group#cidr6s
+    https://go.s3d.club/tf/site-group#cidr6s
     END
 }
 
@@ -30,25 +31,27 @@ variable "domain" {
 
   description = <<-END
     Domain
-    https://go.s3d.club/site-group#domain
+    https://go.s3d.club/tf/site-group#domain
     END
 }
 
 variable "ecrs" {
-  type = list(string)
+  default = []
+  type    = list(string)
 
   description = <<-END
-    Elastic Container Registries
-    https://go.s3d.club/site-group#cidr6s
+    the names for the ECR instances.
+    https://go.s3d.club/tf/site-group#ecrs
     END
 }
 
 variable "ec2_key_name" {
-  type = string
+  default = null
+  type    = string
 
   description = <<-END
-    EC2 Key Name
-    https://go.s3d.club/site-group#ec2_key_name
+    the ec2 key name.
+    https://go.s3d.club/tf/site-group#ec2_key_name
     END
 }
 
@@ -57,8 +60,8 @@ variable "eks_version" {
   type    = string
 
   description = <<-END
-    EKS Cluster Version or `null` to disable EKS
-    https://go.s3d.club/site-group#eks_cluster_version
+    the version for the EKS cluster.
+    https://go.s3d.club/tf/site-group#eks_cluster_version
     END
 }
 
@@ -68,7 +71,7 @@ variable "enable_ec2" {
 
   description = <<-END
     an option to enable the EC2 instance.
-    https://go.s3d.club/site-group#enable_ec2
+    https://go.s3d.club/tf/site-group#enable_ec2
     END
 }
 
@@ -92,13 +95,23 @@ variable "enable_k8_auth" {
     END
 }
 
-variable "enable_tf_lock_table" {
-  default = true
+variable "enable_tf_bucket" {
+  default = false
   type    = bool
 
   description = <<-END
-    Enable a Terraform Lock Table for the group
-    https://go.s3d.club/site-group#enable_tf_lock_table
+    an option that enables the creation of an S3 Bucket for storage of Terraform state.
+    https://go.s3d.club/tf/site-group#enable_tf_lock_table
+    END
+}
+
+variable "enable_tf_lock_table" {
+  default = false
+  type    = bool
+
+  description = <<-END
+    an option that enables the creation of a DynamoDB table for Terraform locks.
+    https://go.s3d.club/tf/site-group#enable_tf_lock_table
     END
 }
 
@@ -107,17 +120,16 @@ variable "ec2_work_count" {
   type    = number
 
   description = <<-END
-    EC2 Worker Count 
-    https://go.s3d.club/site-group#ec2_work_count
+    the count of ec2 worker instances.
+    https://go.s3d.club/tf/site-group#ec2_work_count
     END
 }
 
-variable "kms_key_arn" {
-  default = null
-  type    = string
+variable "kms_key_id" {
+  type = string
 
   description = <<-END
-    a KMS key ARN.
+    the ID of a KMS key.
     https://go.s3d.club/tf/site-group#kms_key_arn
     END
 }
