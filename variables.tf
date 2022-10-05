@@ -144,6 +144,17 @@ variable "name_prefix" {
     END
 }
 
+variable "public_subnets" {
+  default = null
+  type    = list(string)
+
+  description = <<-END
+		a list of subnets where instances that should be public may be placed. Or
+    the value `null` if a random subnet should be used.
+    https://go.s3d.club/tf/site-group#public_subnets
+    END
+}
+
 variable "region" {
   default = "us-east-1"
   type    = string
