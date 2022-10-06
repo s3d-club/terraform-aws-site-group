@@ -66,7 +66,8 @@ variable "egress_cidrs" {
 }
 
 variable "egress_cidr6s" {
-  type = list(string)
+  default = []
+  type    = list(string)
 
   description = <<-END
     a list of addresses for open egress.
