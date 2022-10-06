@@ -10,3 +10,6 @@ Plan:
 
 ## [0.1.7](.)
 - Upgraded `ec2_work` module for improved `.vimrc` and `psql`
+
+## [0.1.8](.)
+- Removed `mate desktop` and `firefox`

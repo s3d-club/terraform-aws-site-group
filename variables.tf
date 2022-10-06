@@ -1,5 +1,6 @@
 variable "az_blacklist" {
-  type = list(string)
+  default = []
+  type    = list(string)
 
   description = <<-END
     Availability Zone Black List
