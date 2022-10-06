@@ -56,6 +56,24 @@ variable "ec2_key_name" {
     END
 }
 
+variable "egress_cidrs" {
+  type = list(string)
+
+  description = <<-END
+    a list of addresses for open egress.
+    https://go.s3d.club/tf/site-group#egress_cidrs
+    END
+}
+
+variable "egress_cidr6s" {
+  type = list(string)
+
+  description = <<-END
+    a list of addresses for open egress.
+    https://go.s3d.club/tf/site-group#egress_cidr6s
+    END
+}
+
 variable "eks_version" {
   default = null
   type    = string

@@ -8,8 +8,9 @@ Plan:
 ## [0.0.0](.) [0.1.6](.)
 - Created early versions
 
-## [0.1.7](.)
+## [0.1.7](.) to [0.1.8](.)
 - Upgraded `ec2_work` module for improved `.vimrc` and `psql`
-
-## [0.1.8](.)
 - Removed `mate desktop` and `firefox`
+
+## [0.1.9](.)
+- Added egress cidrs
