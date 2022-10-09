@@ -15,3 +15,6 @@ Plan:
 
 ## [0.1.10](.)
 - Changed `egress_cidr6s` to default as empty list
+
+## [0.1.11](.)
+- Updated `CODE-OF-CONDUCT.md`
