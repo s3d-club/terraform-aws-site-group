@@ -1,10 +1,10 @@
-# S3D Terraform for a Site Group
+# S3D Site Group Module
 This project defines Terraform resources for a group of sites.
 
 ## Other Documents
 Please read our [LICENSE][lice], [CONTRIBUTING][cont], [CODE-OF-CONDUCT][code],
 and [CHANGES][chge] documents before working in this project and anytime they
-are update.
+are updated.
 
 ## Overview
 Within an AWS account, a group of sites will share resources.
