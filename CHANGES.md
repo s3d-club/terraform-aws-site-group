@@ -16,3 +16,6 @@ Plan:
 ## [0.1.13](.)
 - Made `k8_master` depend on `enable_k8_auth`
 - Improved variable descriptions
+
+## [0.1.14](.)
+- Removed EKS related resources

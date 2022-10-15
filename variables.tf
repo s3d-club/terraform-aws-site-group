@@ -76,16 +76,6 @@ variable "egress_cidr6s" {
     END
 }
 
-variable "eks_version" {
-  default = null
-  type    = string
-
-  description = <<-END
-    the version for the EKS cluster.
-    https://go.s3d.club/tf/site-group#eks_cluster_version
-    END
-}
-
 variable "enable_ec2" {
   default = false
   type    = bool
@@ -93,26 +83,6 @@ variable "enable_ec2" {
   description = <<-END
     an option to enable the EC2 instance.
     https://go.s3d.club/tf/site-group#enable_ec2
-    END
-}
-
-variable "enable_eks" {
-  default = false
-  type    = bool
-
-  description = <<-END
-    an option to enable EKS.
-    https://go.s3d.club/tf/site-group#enable_eks
-    END
-}
-
-variable "enable_k8_auth" {
-  default = false
-  type    = bool
-
-  description = <<-END
-    an option to enable the Kubernets Auth Map..
-    https://go.s3d.club/tf/site-group#enable_k8_auth
     END
 }
 

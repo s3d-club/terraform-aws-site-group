@@ -75,29 +75,6 @@ module "ecr" {
   name_prefix = each.key
 }
 
-module "eks" {
-  count  = var.enable_eks ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-eks?ref=v0.1.5"
-
-  cidrs             = var.cidrs
-  kms_key_arn       = local.kms_key_arn
-  cluster_version   = var.eks_version
-  name_prefix       = local.name_prefix
-  tags              = local.tags
-  subnet_ids        = local.subnet_ids
-  security_group_id = module.sg_ingress_open[0].security_group_id
-}
-
-module "k8_auth" {
-  count      = var.enable_k8_auth ? 1 : 0
-  depends_on = [module.eks]
-  source     = "github.com/s3d-club/terraform-kubernetes-aws-auth?ref=v0.0.7"
-
-  cluster_name    = module.eks[0].cluster.name
-  region          = var.region
-  master_role_arn = aws_iam_role.k8_master[0].arn
-}
-
 module "name" {
   source = "github.com/s3d-club/terraform-external-name?ref=v0.1.7"
 
@@ -116,14 +93,6 @@ module "sg_ingress_open" {
   vpc         = var.vpc_id
   name_prefix = local.name_prefix
   tags        = local.tags
-}
-
-resource "aws_iam_role" "k8_master" {
-  count = var.enable_k8_auth ? 1 : 0
-
-  name               = local.name_prefix
-  tags               = local.tags
-  assume_role_policy = data.aws_iam_policy_document.k8_master.json
 }
 
 # We can't log the logging bucket

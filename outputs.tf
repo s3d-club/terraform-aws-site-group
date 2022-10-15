@@ -38,15 +38,6 @@ output "ec2_key_name" {
     END
 }
 
-output "eks" {
-  value = try(module.eks[0], null)
-
-  description = <<-END
-    EKS
-    https://go.s3d.com/aws-site-group#eks
-    END
-}
-
 output "tags" {
   value = local.tags
 
