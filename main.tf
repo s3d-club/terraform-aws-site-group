@@ -95,7 +95,7 @@ module "k8_auth" {
 
   cluster_name    = module.eks[0].cluster.name
   region          = var.region
-  master_role_arn = aws_iam_role.k8_master.arn
+  master_role_arn = aws_iam_role.k8_master[0].arn
 }
 
 module "name" {
@@ -119,6 +119,8 @@ module "sg_ingress_open" {
 }
 
 resource "aws_iam_role" "k8_master" {
+  count = var.enable_k8_auth ? 1 : 0
+
   name               = local.name_prefix
   tags               = local.tags
   assume_role_policy = data.aws_iam_policy_document.k8_master.json

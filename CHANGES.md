@@ -12,3 +12,7 @@ Plan:
 - Fixed README typo
 - Updated providers
 - Updated modules
+
+## [0.1.13](.)
+- Made `k8_master` depend on `enable_k8_auth`
+- Improved variable descriptions

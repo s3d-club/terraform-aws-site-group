@@ -3,7 +3,7 @@ variable "az_blacklist" {
   type    = list(string)
 
   description = <<-END
-    Availability Zone Black List
+    a list of avalibility zones that should not be used.
     https://go.s3d.club/tf/site-group#az_blacklist
     END
 }
@@ -12,7 +12,7 @@ variable "cidrs" {
   type = list(string)
 
   description = <<-END
-    CIDRs
+    a list of CIDRs.
     https://go.s3d.club/tf/site-group#cidrs
     END
 }
@@ -22,16 +22,17 @@ variable "cidr6s" {
   type    = list(string)
 
   description = <<-END
-    CIDR6s
+    a list of CIDRs.
     https://go.s3d.club/tf/site-group#cidr6s
     END
 }
 
 variable "domain" {
-  type = string
+  default = null
+  type    = string
 
   description = <<-END
-    Domain
+    a domain that already has a route 53 hosted zone.
     https://go.s3d.club/tf/site-group#domain
     END
 }
@@ -41,7 +42,7 @@ variable "ecrs" {
   type    = list(string)
 
   description = <<-END
-    the names for the ECR instances.
+    a list of names for the ECR instances.
     https://go.s3d.club/tf/site-group#ecrs
     END
 }
@@ -51,7 +52,7 @@ variable "ec2_key_name" {
   type    = string
 
   description = <<-END
-    the ec2 key name.
+    an ec2 key name.
     https://go.s3d.club/tf/site-group#ec2_key_name
     END
 }
