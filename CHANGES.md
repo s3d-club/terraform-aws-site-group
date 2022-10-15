@@ -8,14 +8,13 @@ Plan:
 ## [0.0.0](.) [0.1.11](.)
 - Created early versions
 
-## [0.1.12](.)
+## [0.1.12](.) to [0.1.14](.)
 - Fixed README typo
-- Updated providers
-- Updated modules
-
-## [0.1.13](.)
-- Made `k8_master` depend on `enable_k8_auth`
 - Improved variable descriptions
-
-## [0.1.14](.)
+- Made `k8_master` depend on `enable_k8_auth`
 - Removed EKS related resources
+- Updated modules
+- Updated providers
+
+## [0.1.15](.)
+- Updated `ec2_work` module

@@ -51,19 +51,16 @@ locals {
 
 module "ec2_work" {
   count  = var.enable_ec2 ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-ec2?ref=v0.1.14"
+  source = "github.com/s3d-club/terraform-aws-ec2?ref=v0.1.15"
 
-  cidr6s        = var.cidr6s
-  cidrs         = var.cidrs
+  ssh_cidr6s    = var.cidr6s
+  ssh_cidrs     = var.cidrs
   domain        = var.domain
   egress_cidr6s = var.egress_cidr6s
   egress_cidrs  = var.egress_cidrs
   key_name      = local.ec2_key_name
-  project       = "admin"
   subnet_id     = try(var.public_subnets[0], local.subnet_ids[0])
-  suffix        = join("-", [local.name_prefix, count.index])
   tags          = local.tags
-  template      = "work"
   vpc_id        = var.vpc_id
 }
 
