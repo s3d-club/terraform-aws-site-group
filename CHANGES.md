@@ -18,3 +18,6 @@ Plan:
 
 ## [0.1.15](.)
 - Updated `ec2_work` module
+
+## [0.1.16](.)
+- Updated `ec2_work` module
