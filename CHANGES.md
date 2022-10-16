@@ -24,3 +24,6 @@ Plan:
 
 ## [0.1.22](.)
 - Changed bucket names to use `tf-` prefix and no random components
+
+## [0.1.23](.)
+- Fixed tfsec curl command
