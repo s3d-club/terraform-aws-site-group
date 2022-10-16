@@ -7,7 +7,7 @@ data "aws_kms_key" "this" {
 }
 
 data "aws_subnet" "this" {
-  for_each = var.vpc_id == null ? [] : toset(data.aws_subnets.this[0].ids)
+  for_each = toset(var.vpc_id == null ? [] : data.aws_subnets.this[0].ids)
 
   id = each.value
 }

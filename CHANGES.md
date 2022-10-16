@@ -9,19 +9,16 @@ Plan:
 - Created early versions
 
 ## [0.1.12](.) to [0.1.16](.)
-- Fixed README typo
 - Improved variable descriptions
-- Made `k8_master` depend on `enable_k8_auth`
 - Removed EKS related resources
 - Updated modules
 - Updated providers
 
-## [0.1.17](.)
+## [0.1.17](.) to [0.1.19](.)
 - Added `.gitignore`
+- Fixed issues with null vpc
+- Improved variables
 - Updated `ec2_work` module
 
-## [0.1.18](.)
-- Improved variables
-
-## [0.1.19](.)
-- Fixed issues with null vpc
+## [0.1.20](.)
+- Fixed data.subnet `for_each`
