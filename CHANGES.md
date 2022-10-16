@@ -19,3 +19,6 @@ Plan:
 ## [0.1.17](.)
 - Added `.gitignore`
 - Updated `ec2_work` module
+
+## [0.1.18](.)
+- Improved variables

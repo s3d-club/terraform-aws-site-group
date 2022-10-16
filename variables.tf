@@ -9,7 +9,8 @@ variable "az_blacklist" {
 }
 
 variable "cidrs" {
-  type = list(string)
+  default = null
+  type    = list(string)
 
   description = <<-END
     a list of CIDRs.
@@ -58,7 +59,8 @@ variable "ec2_key_name" {
 }
 
 variable "egress_cidrs" {
-  type = list(string)
+  default = null
+  type    = list(string)
 
   description = <<-END
     a list of addresses for open egress.
@@ -146,16 +148,6 @@ variable "public_subnets" {
     END
 }
 
-variable "region" {
-  default = "us-east-1"
-  type    = string
-
-  description = <<-END
-    an AWS region (i.e. `us-east-1`).
-    https://go.s3d.club/tf/site-group#region
-    END
-}
-
 variable "tags" {
   default = {}
   type    = map(string)
@@ -167,7 +159,8 @@ variable "tags" {
 }
 
 variable "vpc_id" {
-  type = string
+  default = null
+  type    = string
 
   description = <<-END
     a VPC ID.
