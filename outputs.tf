@@ -30,7 +30,7 @@ output "ec2" {
 }
 
 output "ec2_key_name" {
-  value = local.ec2_key_name
+  value = var.ec2_key_name
 
   description = <<-END
     EC2 Key Name

@@ -127,12 +127,11 @@ variable "kms_key_id" {
     END
 }
 
-variable "name_prefix" {
-  default = null
-  type    = string
+variable "name" {
+  type = string
 
   description = <<-END
-    a prefix for resource names.
+    a logical name for the site group and prefix for the associated resource names.
     https://go.s3d.club/tf/site-group#name_prefix
     END
 }

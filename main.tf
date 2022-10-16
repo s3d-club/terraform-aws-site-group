@@ -23,15 +23,9 @@ data "aws_subnets" "this" {
 
 locals {
   account_id  = data.aws_caller_identity.this.account_id
-  name_prefix = module.name.prefix
+  name_prefix = var.name
   tags        = module.name.tags
   kms_key_arn = try(data.aws_kms_key.this[0].arn, null)
-
-  # If the user supplies an EC2 Keyname we use theirs and do not create one for
-  # the Site Group.
-  ec2_key_name = (
-    coalesce(var.ec2_key_name, "${local.name_prefix}-0")
-  )
 
   # only use the available zones we want to run in
   subnet_ids = try([
@@ -47,8 +41,8 @@ module "ec2_work" {
   domain        = var.domain
   egress_cidr6s = var.egress_cidr6s
   egress_cidrs  = var.egress_cidrs
-  key_name      = local.ec2_key_name
-  name_prefix   = module.name.prefix
+  key_name      = var.ec2_key_name
+  name_prefix   = local.name_prefix
   ssh_cidr6s    = var.cidr6s
   ssh_cidrs     = var.cidrs
   subnet_id     = try(var.public_subnets[0], local.subnet_ids[0])
@@ -67,7 +61,7 @@ module "ecr" {
 module "name" {
   source = "github.com/s3d-club/terraform-external-name?ref=v0.1.7"
 
-  context = var.name_prefix
+  context = var.name
   path    = path.module
   tags    = var.tags
 }

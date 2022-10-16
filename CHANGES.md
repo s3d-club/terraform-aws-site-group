@@ -14,11 +14,12 @@ Plan:
 - Updated modules
 - Updated providers
 
-## [0.1.17](.) to [0.1.19](.)
+## [0.1.17](.) to [0.1.20](.)
 - Added `.gitignore`
+- Fixed data.subnet `for_each`
 - Fixed issues with null vpc
 - Improved variables
 - Updated `ec2_work` module
 
-## [0.1.20](.)
-- Fixed data.subnet `for_each`
+## [0.1.21](.)
+- Made name non-random
