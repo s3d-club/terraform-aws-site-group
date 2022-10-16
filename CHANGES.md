@@ -14,12 +14,13 @@ Plan:
 - Updated modules
 - Updated providers
 
-## [0.1.17](.) to [0.1.20](.)
+## [0.1.17](.) to [0.1.21](.)
 - Added `.gitignore`
 - Fixed data.subnet `for_each`
 - Fixed issues with null vpc
 - Improved variables
+- Made name non-random
 - Updated `ec2_work` module
 
-## [0.1.21](.)
-- Made name non-random
+## [0.1.22](.)
+- Changed bucket names to use `tf-` prefix and no random components

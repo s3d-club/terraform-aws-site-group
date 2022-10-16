@@ -84,8 +84,8 @@ module "sg_ingress_open" {
 resource "aws_s3_bucket" "log" {
   count = var.enable_tf_bucket ? 1 : 0
 
-  bucket_prefix = "${local.name_prefix}-tf-log-"
-  tags          = local.tags
+  bucket = "tf-log-${local.name_prefix}"
+  tags   = local.tags
 
   server_side_encryption_configuration {
     rule {
@@ -100,8 +100,8 @@ resource "aws_s3_bucket" "log" {
 resource "aws_s3_bucket" "this" {
   count = var.enable_tf_bucket ? 1 : 0
 
-  bucket_prefix = "${local.name_prefix}-tf-"
-  tags          = local.tags
+  bucket = "tf-${local.name_prefix}"
+  tags   = local.tags
 
   logging {
     target_bucket = aws_s3_bucket.log[0].id
