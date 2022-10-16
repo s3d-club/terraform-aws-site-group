@@ -1,16 +1,5 @@
 data "aws_caller_identity" "this" {}
 
-data "aws_iam_policy_document" "k8_master" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "AWS"
-      identifiers = [local.account_id]
-    }
-  }
-}
-
 data "aws_kms_key" "this" {
   count = var.kms_key_id == null ? 0 : 1
 
@@ -18,12 +7,14 @@ data "aws_kms_key" "this" {
 }
 
 data "aws_subnet" "this" {
-  for_each = toset(data.aws_subnets.this.ids)
+  for_each = var.vpc_id == null ? [] : toset(data.aws_subnets.this[0].ids)
 
   id = each.value
 }
 
 data "aws_subnets" "this" {
+  count = var.vpc_id == null ? 0 : 1
+
   filter {
     name   = "vpc-id"
     values = [var.vpc_id]
@@ -44,7 +35,7 @@ locals {
 
   # only use the available zones we want to run in
   subnet_ids = try([
-    for id in data.aws_subnet.this : id.id
+    for id in data.aws_subnet.this[0] : id.id
     if !contains(var.az_blacklist, id.availability_zone)
   ], null)
 }

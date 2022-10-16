@@ -22,3 +22,6 @@ Plan:
 
 ## [0.1.18](.)
 - Improved variables
+
+## [0.1.19](.)
+- Fixed issues with null vpc
