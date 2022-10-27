@@ -56,6 +56,7 @@ module "ecr" {
 
   kms_key_arn = local.kms_key_arn
   name_prefix = each.key
+  tags        = local.tags
 }
 
 module "name" {
