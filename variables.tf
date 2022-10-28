@@ -3,8 +3,7 @@ variable "az_blacklist" {
   type    = list(string)
 
   description = <<-END
-    a list of avalibility zones that should not be used.
-    https://go.s3d.club/tf/site-group#az_blacklist
+    A list of avalibility zones that should not be used.
     END
 }
 
@@ -13,8 +12,7 @@ variable "cidrs" {
   type    = list(string)
 
   description = <<-END
-    a list of CIDRs.
-    https://go.s3d.club/tf/site-group#cidrs
+    A list of CIDRs.
     END
 }
 
@@ -23,8 +21,7 @@ variable "cidr6s" {
   type    = list(string)
 
   description = <<-END
-    a list of CIDRs.
-    https://go.s3d.club/tf/site-group#cidr6s
+    A list of CIDRs.
     END
 }
 
@@ -33,8 +30,7 @@ variable "domain" {
   type    = string
 
   description = <<-END
-    a domain that already has a route 53 hosted zone.
-    https://go.s3d.club/tf/site-group#domain
+    A domain that already has a route 53 hosted zone.
     END
 }
 
@@ -43,8 +39,7 @@ variable "ecrs" {
   type    = list(string)
 
   description = <<-END
-    a list of names for the ECR instances.
-    https://go.s3d.club/tf/site-group#ecrs
+    A list of names for the ECR instances.
     END
 }
 
@@ -53,8 +48,7 @@ variable "ec2_key_name" {
   type    = string
 
   description = <<-END
-    an ec2 key name.
-    https://go.s3d.club/tf/site-group#ec2_key_name
+    An ec2 key name.
     END
 }
 
@@ -63,8 +57,7 @@ variable "egress_cidrs" {
   type    = list(string)
 
   description = <<-END
-    a list of addresses for open egress.
-    https://go.s3d.club/tf/site-group#egress_cidrs
+    A list of addresses for open egress.
     END
 }
 
@@ -73,8 +66,7 @@ variable "egress_cidr6s" {
   type    = list(string)
 
   description = <<-END
-    a list of addresses for open egress.
-    https://go.s3d.club/tf/site-group#egress_cidr6s
+    A list of addresses for open egress.
     END
 }
 
@@ -83,8 +75,7 @@ variable "enable_ec2" {
   type    = bool
 
   description = <<-END
-    an option to enable the EC2 instance.
-    https://go.s3d.club/tf/site-group#enable_ec2
+    An option to enable the EC2 instance.
     END
 }
 
@@ -93,8 +84,7 @@ variable "enable_tf_bucket" {
   type    = bool
 
   description = <<-END
-    an option that enables the creation of an S3 Bucket for storage of Terraform state.
-    https://go.s3d.club/tf/site-group#enable_tf_lock_table
+    An option that enables the creation of an S3 Bucket for storage of Terraform state.
     END
 }
 
@@ -103,18 +93,7 @@ variable "enable_tf_lock_table" {
   type    = bool
 
   description = <<-END
-    an option that enables the creation of a DynamoDB table for Terraform locks.
-    https://go.s3d.club/tf/site-group#enable_tf_lock_table
-    END
-}
-
-variable "ec2_work_count" {
-  default = 1
-  type    = number
-
-  description = <<-END
-    the count of ec2 worker instances.
-    https://go.s3d.club/tf/site-group#ec2_work_count
+    An option that enables the creation of a DynamoDB table for Terraform locks.
     END
 }
 
@@ -122,8 +101,7 @@ variable "kms_key_id" {
   type = string
 
   description = <<-END
-    the ID of a KMS key.
-    https://go.s3d.club/tf/site-group#kms_key_arn
+    The ID of a KMS key.
     END
 }
 
@@ -131,8 +109,7 @@ variable "name" {
   type = string
 
   description = <<-END
-    a logical name for the site group and prefix for the associated resource names.
-    https://go.s3d.club/tf/site-group#name_prefix
+    A logical name for the site group and prefix for the associated resource names.
     END
 }
 
@@ -141,9 +118,8 @@ variable "public_subnets" {
   type    = list(string)
 
   description = <<-END
-		a list of subnets where instances that should be public may be placed. Or
+    A list of subnets where instances that should be public may be placed. Or
     the value `null` if a random subnet should be used.
-    https://go.s3d.club/tf/site-group#public_subnets
     END
 }
 
@@ -152,8 +128,7 @@ variable "tags" {
   type    = map(string)
 
   description = <<-END
-    a map of tags for resources.
-    https://go.s3d.club/tf/site-group#tags
+    A map of tags for resources.
     END
 }
 
@@ -162,7 +137,6 @@ variable "vpc_id" {
   type    = string
 
   description = <<-END
-    a VPC ID.
-    https://go.s3d.club/tf/site-group#vpc_id
+    A VPC ID.
     END
 }

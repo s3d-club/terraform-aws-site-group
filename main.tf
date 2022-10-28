@@ -1,5 +1,3 @@
-data "aws_caller_identity" "this" {}
-
 data "aws_kms_key" "this" {
   count = var.kms_key_id == null ? 0 : 1
 
@@ -22,7 +20,6 @@ data "aws_subnets" "this" {
 }
 
 locals {
-  account_id  = data.aws_caller_identity.this.account_id
   name_prefix = var.name
   tags        = module.name.tags
   kms_key_arn = try(data.aws_kms_key.this[0].arn, null)
@@ -36,7 +33,7 @@ locals {
 
 module "ec2_work" {
   count  = var.enable_ec2 ? 1 : 0
-  source = "github.com/s3d-club/terraform-aws-ec2?ref=v0.1.24"
+  source = "github.com/s3d-club/terraform-aws-ec2?ref=v0.1.26"
 
   domain        = var.domain
   egress_cidr6s = var.egress_cidr6s
@@ -52,7 +49,7 @@ module "ec2_work" {
 
 module "ecr" {
   for_each = toset(var.ecrs)
-  source   = "github.com/s3d-club/terraform-aws-ecr?ref=v0.1.12"
+  source   = "github.com/s3d-club/terraform-aws-ecr?ref=v0.1.15"
 
   kms_key_arn = local.kms_key_arn
   name_prefix = each.key
@@ -60,7 +57,7 @@ module "ecr" {
 }
 
 module "name" {
-  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.10"
+  source = "github.com/s3d-club/terraform-external-name?ref=v0.1.14"
 
   context = var.name
   path    = path.module
@@ -70,11 +67,11 @@ module "name" {
 # tfsec:ignore:aws-ec2-no-public-ingress-sgr
 module "sg_ingress_open" {
   count  = var.cidrs == null ? 0 : 1
-  source = "github.com/s3d-club/terraform-aws-sg_ingress_open?ref=v0.1.10"
+  source = "github.com/s3d-club/terraform-aws-sg_ingress_open?ref=v0.1.12"
 
-  cidr        = var.cidrs
-  cidr6       = var.cidr6s
-  vpc         = var.vpc_id
+  cidrs       = var.cidrs
+  cidr6s      = var.cidr6s
+  vpc_id      = var.vpc_id
   name_prefix = local.name_prefix
   tags        = local.tags
 }

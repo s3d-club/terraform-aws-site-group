@@ -6,3 +6,10 @@ Recently completed and planned work is tracked here.
 
 ## [0.1.32](.)
 - Removed dependency on `s3d-flow-json`
+
+## [0.1.33](.)
+- Improved descriptions of variables and outputs
+- Updated `ec2_work` module
+- Updated `ecr` module
+- Updated `name` module
+- Updated `sg_ingress_open` module
