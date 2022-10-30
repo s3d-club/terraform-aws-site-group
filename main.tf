@@ -104,10 +104,6 @@ resource "aws_s3_bucket" "this" {
   bucket = "tf-${local.name_prefix}"
   tags   = local.tags
 
-  logging {
-    target_bucket = aws_s3_bucket.log[0].id
-  }
-
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -116,6 +112,14 @@ resource "aws_s3_bucket" "this" {
       }
     }
   }
+}
+
+resource "aws_s3_bucket_logging" "this" {
+  count  = var.enable_tf_bucket ? 1 : 0
+  bucket = aws_s3_bucket.this[0].id
+
+  target_bucket = aws_s3_bucket.log[0].id
+  target_prefix = "log/"
 }
 
 resource "aws_s3_bucket_acl" "log" {

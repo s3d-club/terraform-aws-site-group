@@ -13,3 +13,6 @@ Recently completed and planned work is tracked here.
 - Updated `ecr` module
 - Updated `name` module
 - Updated `sg_ingress_open` module
+
+## [0.1.34](.)
+- Changed to use `aws_s3_bucket_logging` resource
