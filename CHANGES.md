@@ -18,3 +18,6 @@ This file describes the project history as it relates to tagged versions.
 
 ## [0.1.42](.)
 - Updated modules and providers
+
+## [0.1.43](.)
+- Updated `ec2_work` module
