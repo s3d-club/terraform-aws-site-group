@@ -11,5 +11,5 @@ This file describes the project history as it relates to tagged versions.
 - Improved descriptions of variables and outputs
 - Updated modules and providers
 
-## [0.1.46](.)
+## [0.1.46](.) to [0.1.47](.)
 - Updated `aws` provider
