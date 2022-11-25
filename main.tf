@@ -49,7 +49,7 @@ module "ec2_work" {
 
 module "ecr" {
   for_each = toset(var.ecrs)
-  source   = "github.com/s3d-club/terraform-aws-ecr?ref=v0.1.24"
+  source   = "github.com/s3d-club/terraform-aws-ecr?ref=v0.1.25"
 
   kms_key_arn = local.kms_key_arn
   name_prefix = each.key
@@ -67,7 +67,7 @@ module "name" {
 # tfsec:ignore:aws-ec2-no-public-ingress-sgr
 module "sg_ingress_open" {
   count  = var.cidrs == null ? 0 : 1
-  source = "github.com/s3d-club/terraform-aws-sg_ingress_open?ref=v0.1.20"
+  source = "github.com/s3d-club/terraform-aws-sg_ingress_open?ref=v0.1.21"
 
   cidrs       = var.cidrs
   cidr6s      = var.cidr6s
